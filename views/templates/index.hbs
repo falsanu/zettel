@@ -1,0 +1,23 @@
+<div class="jumbotron"><h1>Housewifes! Welcome to your future</h1>
+
+  <p>With this tool your husband has no more excuses to forget something to buy!</p>
+
+  <p>It's as simple as your normal shopping sheet. Simply add new items and your husband gets the new item instantly on
+    his mobile device.</p>
+
+  <p>
+    <a class="btn btn-lg btn-primary" href="/login" role="button">Login &raquo;</a>
+    <a class="btn btn-lg btn-primary" href="/register" role="button">Register &raquo;</a>
+  </p>
+</div>
+{{#if zettel.length}}
+  <div class="">
+    <h2>Need some shopping inspiration? Checkout some zettel here.</h2>
+
+    <ul class="list-group">
+        {{#each zettel item="item"}}
+          <li class="list-group-item"><a href="/{{item.urlSlug}}">{{item.name}}</a></li>
+        {{/each}}
+    </ul>
+  </div>
+{{/if}}

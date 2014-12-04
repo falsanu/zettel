@@ -1,0 +1,24 @@
+<div class="container-fluid">
+
+  <h1>Create Zettel</h1>
+
+  <form role="form" method="post" action="/{{zettelUrlSlug}}/new">
+    <div class="form-group">
+      <label for="zettelName">Note Name</label>
+      <input type="text" class="form-control" id="zettelName" name="zettelName" placeholder="Enter a Zettel Name">
+    </div>
+
+    <div class="form-group">
+      <label for="zettelUrlSlug">Note UrlSlug</label>
+      <input type="text" class="form-control" name="zettelUrlSlug" id="zettelUrlSlug" value="{{zettelUrlSlug}}" placeholder="Enter a Zettel UrlSlug">
+    </div>
+
+    <div class="checkbox">
+      <label>
+        <input type="checkbox" name="zettelPrivate"> Private
+      </label>
+    </div>
+
+    <button type="submit" class="btn btn-default">Submit</button>
+  </form>
+</div>

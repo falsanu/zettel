@@ -1,0 +1,70 @@
+<div class="container-fluid">
+
+  <h1>List : {{zettel.name}}</h1>
+
+
+  <button type="button" class="btn btn-block" data-toggle="collapse" data-target="#demo" aria-expanded="true" aria-controls="demo">
+    Edit Zettel
+  </button>
+
+  <div id="demo" class="collapse">
+
+
+
+  <div class="row">
+    <div class="col-xs-12 col-md-12">
+      <form role="form" class="form-inline" id="formAddItem" method="post" action="/{{zettel.urlSlug}}/addItem">
+        <div class="input-group">
+          <input type="text" class="form-control" id="itemName" name="itemName" placeholder="Apples" required />
+      <span class="input-group-btn">
+        <input class="btn btn-default" type="submit" value="Go!"/>
+      </span>
+        </div>
+        <!-- /input-group -->
+      </form>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12 col-md-12">
+      <pre id="test" class="hidden"></pre>
+    </div>
+  </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12 col-md-12">
+        {{#if zettel.items.length}}
+          <ul class="list-group" id="list">
+              {{#each zettel.items itemName="item"}}
+                <li class="list-group-item">{{item.name}}
+                  <a href="/{{zettel.urlSlug}}/removeItem/{{item._id}}" class="close"><span aria-hidden="true">&times;</span><span
+                          class="sr-only">Close</span></a>
+                </li>
+              {{/each}}
+          </ul>
+        {{else}}
+          <p>No Items</p>
+        {{/if}}
+    </div>
+  </div>
+  <script>
+    var socket = io.connect('http://localhost');
+    socket.emit('registerData', {urlSlug: '{{zettel.urlSlug}}'});
+    socket.on('updateZettel', function (data) {
+      console.log(data);
+      var element = document.getElementById("list");
+      while (element.firstChild) {
+        element.removeChild(element.firstChild);
+      }
+      for (var i = 0; i < data.length; i++) {
+        var obj = data[i];
+        var el = document.createElement('li');
+        el.className = 'list-group-item';
+        el.innerHTML = obj.name;
+        element.appendChild(el);
+      }
+    });
+    socket.on('test', function (data) {
+      document.getElementById('test').innerHTML = data;
+    });
+  </script>
+</div>
