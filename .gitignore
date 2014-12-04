@@ -32,10 +32,6 @@ tmp/
 # Generated
 build
 doc
-src/i18n
-src/config/local.json
-src/roles/lucius/public/js/platform.js
-src/localCache
 dump.rdb
 gitinfo.json
 *.css.map
