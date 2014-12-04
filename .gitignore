@@ -1,0 +1,44 @@
+# Node stuff
+lib-cov
+*.seed
+*.log
+*.csv
+*.dat
+*.out
+*.pid
+*.gz
+forever/
+.DS_Store
+jshint.xml
+
+pids
+logs
+results
+node_modules
+
+# Defaults
+tmp/
+
+# Styles
+.sass-cache
+*.css
+
+# Intellij
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Generated
+build
+doc
+src/i18n
+src/config/local.json
+src/roles/lucius/public/js/platform.js
+src/localCache
+dump.rdb
+gitinfo.json
+*.css.map
+
+# jshint reports
+jshint*.xml
