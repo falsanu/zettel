@@ -1,0 +1,75 @@
+<div class="container-fluid">
+
+  <h1>List : {{zettel.name}}</h1>
+
+  <div class="row">
+    <div class="col-xs-12 col-md-12">
+        {{#if zettel.items.length}}
+          <ul class="list-group" id="list">
+              {{#each zettel.items itemName="item"}}
+                <li class="list-group-item">
+                  <div class="checkbox">
+                    <label>
+                      <input type="checkbox" name="zettelID"
+                             data-item-id="{{item._id}}" onchange="markAsBought(this);"><span>{{item.amount}} {{item.name}}</span>
+                    </label>
+                  </div>
+                </li>
+              {{/each}}
+          </ul>
+        {{else}}
+          <p>No Items</p>
+        {{/if}}
+    </div>
+  </div>
+  <script>
+    var socket = io.connect('http://localhost');
+    socket.emit('registerData', {urlSlug: '{{zettel.urlSlug}}'});
+    socket.on('updateZettel', function (data) {
+      var element = document.getElementById("list");
+      while (element.firstChild) {
+        element.removeChild(element.firstChild);
+      }
+      for (var i = 0; i < data.length; i++) {
+        var obj = data[i];
+        var el = document.createElement('li');
+        el.className = 'list-group-item';
+        el.innerHTML = obj.name;
+        element.appendChild(el);
+      }
+    });
+
+    function createNewItem(item) {
+      var newElement = document.getElementById('tpl-item').cloneNode(true),
+              checkbox = jQuery(newElement).find('input[checkbox]'),
+              textField = jQuery(newElement).find('span'),
+              list = document.getElementById('list');
+
+      jQuery(newElement).removeClass('hidden');
+      jQuery(newElement).removeAttr('id');
+      checkbox.data('item-id', item._id);
+
+      textField.html(item.amount + ' ' + item.name);
+      list.appendChild(newElement);
+    }
+
+    function markAsBought(element){
+      var el = jQuery(element);
+      console.log(el.context.checked);
+      if (el.context.checked) {
+        el.parents('li').addClass('has-success');
+        // emit to socket
+        socket.emit('itemBought', {id:el.data('item-id')});
+      }
+    }
+
+
+  </script>
+  <li id="tpl-item" class="list-group-item hidden">
+    <div class="checkbox">
+      <label>
+        <input type="checkbox" name="zettelID" onchange="markAsBought(this);"/><span></span>
+      </label>
+    </div>
+  </li>
+</div>

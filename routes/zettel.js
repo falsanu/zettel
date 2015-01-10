@@ -34,6 +34,30 @@ function zettelFromUrlSlugAction(req, res, next){
 }
 
 /**
+ * Shows the Zettel with a given URL-Slug
+ * @param req
+ * @param res
+ * @param next
+ */
+function zettelFromUrlSlugViewAction(req, res, next){
+  var urlSlug = req.param('zettelUrlSlug');
+  Zettel.findByUrlSlug(urlSlug, true, function (err, zettel) {
+    if (err) {
+      next(err);
+    }
+    if(!zettel){
+      res.redirect('/'+ urlSlug + '/new')
+    }
+    else {
+      res.render('zettel/view', {title: 'Zettel :: ' + zettel.name, zettel: zettel});
+    }
+  });
+}
+
+
+
+
+/**
  * Show the new Zettel form
  * @param req
  * @param res
@@ -104,6 +128,8 @@ function removeItemFromZettelByUrlSlugAction(req, res, next) {
 
 /* GET Items on listing. */
 router.get('/:zettelUrlSlug', zettelFromUrlSlugAction);
+
+router.get('/:zettelUrlSlug/view', zettelFromUrlSlugViewAction);
 
 router.get('/:zettelUrlSlug/new', createZettelFromUrlSlugAction);
 
