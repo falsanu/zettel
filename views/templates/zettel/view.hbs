@@ -7,11 +7,12 @@
         {{#if zettel.items.length}}
           <ul class="list-group" id="list">
               {{#each zettel.items itemName="item"}}
-                <li class="list-group-item">
+                <li class="list-group-item {{#if item.alreadyBought}}has-success{{/if}}">
                   <div class="checkbox">
                     <label>
                       <input type="checkbox" name="zettelID"
-                             data-item-id="{{item._id}}" onchange="markAsBought(this);"><span>{{item.amount}} {{item.name}}</span>
+                             data-item-id="{{item._id}}" onchange="markAsBought(this);"
+                             {{#if item.alreadyBought}}checked{{/if}}><span>{{item.test}} {{item.amount}} {{item.name}}</span>
                     </label>
                   </div>
                 </li>
@@ -39,6 +40,9 @@
       }
     });
 
+    socket.on('changedBoughtStatus', function (data) {
+      console.log(data);
+    });
     function createNewItem(item) {
       var newElement = document.getElementById('tpl-item').cloneNode(true),
               checkbox = jQuery(newElement).find('input[checkbox]'),
@@ -58,9 +62,12 @@
       console.log(el.context.checked);
       if (el.context.checked) {
         el.parents('li').addClass('has-success');
-        // emit to socket
-        socket.emit('itemBought', {id:el.data('item-id')});
+      } else {
+        el.parents('li').removeClass('has-success');
       }
+      // emit to socket
+      socket.emit('itemBought', {id: el.data('item-id'), status: el.context.checked});
+
     }
 
 

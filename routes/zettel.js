@@ -101,9 +101,13 @@ function saveNewZettelAction(req, res, next) {
  * @param next
  */
 function addItemToZettelByUrlSlugAction(req, res, next) {
-  var name = req.body.itemName;
+  var data = {
+    name: req.body.itemName,
+    amount: req.body.amount
+  };
+
   Zettel.findByUrlSlug(req.param('zettelUrlSlug'), false, function (err, zettel) {
-    zettel.addItem(name, function(err, zettel){
+    zettel.addItem(data, function (err, zettel) {
       res.redirect('/' + zettel.urlSlug);
     })
   });

@@ -50,6 +50,11 @@ function logoutAction(req, res, next) {
  * @param next
  */
 function registerAction(req, res, next) {
+  var data = {
+    username: req.body.username,
+    email: req.body.email,
+    password: req.body.password
+  }
   res.render(viewPath + 'register');
 }
 
