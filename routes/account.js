@@ -12,6 +12,8 @@ var express = require('express');
 var router = express.Router();
 var debug = require('debug')('zettel');
 
+var User = require('./../lib/models/User');
+
 var viewPath = 'account/';
 
 
@@ -50,12 +52,41 @@ function logoutAction(req, res, next) {
  * @param next
  */
 function registerAction(req, res, next) {
-  var data = {
-    username: req.body.username,
-    email: req.body.email,
-    password: req.body.password
+
+  if(req.method === 'POST') {
+    req.assert('username', 'required').notEmpty();
+    req.assert('email', 'valid email required').isEmail();
+    req.assert('password', '6 to 20 characters required').len(6, 20);
+
+    var errors = req.validationErrors(true);
+    if (errors) {
+      res.render(viewPath + 'register', {errors: errors});
+      return;
+    }
+
+    var data = {
+      username: req.body.username,
+      email: req.body.email,
+      password: req.body.password
+    }
+
+    User.create(data, function (err, user) {
+      if (!err) {
+        res.redirect('/user/' + data.username);
+      } else {
+        if(err.code === 11000){
+          var errors = {};
+          errors.username = {
+            value:data.username,
+            msg:'username already in use'
+          };
+        }
+        res.render(viewPath + 'register', {errors:errors});
+      }
+    });
+  }else{
+    res.render(viewPath + 'register');
   }
-  res.render(viewPath + 'register');
 }
 
 router.get('/login', loginAction);
